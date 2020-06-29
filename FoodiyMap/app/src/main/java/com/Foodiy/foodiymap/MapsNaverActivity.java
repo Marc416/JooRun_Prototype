@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -28,11 +29,13 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.util.FusedLocationSource;
 
 public class MapsNaverActivity extends Activity implements OnMapReadyCallback  {
 
@@ -57,12 +60,15 @@ public class MapsNaverActivity extends Activity implements OnMapReadyCallback  {
 
         mapView = findViewById(R.id.map);   //맵을 띄운다
 
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         View.OnClickListener listner = new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-
+                naverMap.setLocationSource(new FusedLocationSource(MapsNaverActivity.this, getChangingConfigurations()));
+                naverMap.setLocationTrackingMode(LocationTrackingMode.Face);
             }
         };
         ImageView btnMyLocation = (ImageView) findViewById(R.id.notFixedGps);
